@@ -1,5 +1,5 @@
 [package]
-name = "HelloWorldRust"
+name = "hello_world_rust"
 version = "0.1.0"
 authors = ["kopps <simon.kopp@thi.de>"]
 edition = "2018"
