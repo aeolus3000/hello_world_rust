@@ -132,4 +132,22 @@ mod stack_test {
         assert_eq!(stack.is_full(), false);
     }
 
+    #[test]
+    fn stack_push_should_return_error_when_full() {
+        //given: a new stack
+        let mut stack = Stack::new();
+        let _ = stack.push(5);
+        let _ = stack.push(5);
+        let _ = stack.push(5);
+        let _ = stack.push(5);
+        assert_eq!(stack.push(5).is_err(), true);
+    }
+
+    #[test]
+    fn stack_pop_should_return_error_when_empty() {
+        //given: a new stack
+        let mut stack = Stack::new();
+        assert_eq!(stack.pop().is_err(), true);
+    }
+
 }
