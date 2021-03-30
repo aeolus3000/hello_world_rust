@@ -1,13 +1,13 @@
 const SIZE: usize = 4;
 
 pub struct Stack {
-    buffer: [i32; SIZE],
+    buffer: Vec<i32>,
     pointer: usize
 }
 
 impl Stack {
     pub fn new() -> Stack {
-        let buffer: [i32; SIZE] = [0; SIZE];
+        let buffer: Vec<i32> = Vec::new();
         let pointer: usize = 0;
         let stack = Stack {
             buffer,
@@ -28,7 +28,7 @@ impl Stack {
         if self.is_full() {
             return Err("Can't push on stack because it is full")
         }
-        self.buffer[self.pointer] = value;
+        self.buffer.push(value);
         self.pointer += 1;
         Ok(self)
     }
@@ -79,8 +79,9 @@ mod stack_test {
     fn popping_from_stack_should_return_correct_value() {
         //given: a new stack
         let mut stack = Stack::new();
-        stack.pointer = 3;
-        stack.buffer = [11,12,13,0];
+        let _ = stack.push(11);
+        let _ = stack.push(12);
+        let _ = stack.push(13);
         assert_eq!(stack.pop(), Ok(13));
         assert_eq!(stack.pop(), Ok(12));
         assert_eq!(stack.pop(), Ok(11));
