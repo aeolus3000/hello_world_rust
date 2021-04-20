@@ -1,9 +1,12 @@
+use crate::utils::pushpop::PushPop;
+
 const SIZE: usize = 4;
 
 pub struct Stack {
     buffer: Vec<i32>,
     pointer: usize
 }
+
 
 impl Stack {
     pub fn new() -> Stack {
@@ -15,16 +18,10 @@ impl Stack {
         };
         stack
     }
+}
 
-    pub fn pop(&mut self) -> Result<i32, &str> {
-        if self.is_empty() {
-            return Err("Can't pop from stack because it is empty")
-        }
-        self.pointer -= 1;
-        Ok(self.buffer[self.pointer])
-    }
-
-    pub fn push(&mut self, value: i32) -> Result<&mut Stack, &str> {
+impl PushPop for Stack {
+    fn push(&mut self, value: i32) -> Result<&mut dyn PushPop, &str> {
         if self.is_full() {
             return Err("Can't push on stack because it is full")
         }
@@ -33,16 +30,24 @@ impl Stack {
         Ok(self)
     }
 
-    fn is_full(&self,) -> bool {
-        self.pointer == SIZE
+    fn pop(&mut self) -> Result<i32, &str> {
+        if self.is_empty() {
+            return Err("Can't pop from stack because it is empty")
+        }
+        self.pointer -= 1;
+        Ok(self.buffer[self.pointer])
+    }
+
+    fn size(&self) -> usize {
+        self.pointer
     }
 
     fn is_empty(&self) -> bool {
         self.pointer == 0
     }
 
-    pub fn size(&self) -> usize {
-        self.pointer
+    fn is_full(&self,) -> bool {
+        self.pointer == SIZE
     }
 }
 
@@ -62,7 +67,7 @@ mod stack_test {
         let value = 15;
         //given: a new stack
         let mut stack = Stack::new();
-        assert_eq!(stack.buffer[0], 0);
+        assert_eq!(stack.buffer.len(), 0);
         let _ = stack.push(value);
         assert_eq!(stack.buffer[0], value);
     }
@@ -91,12 +96,10 @@ mod stack_test {
     fn popping_from_stack_should_decrement_pointer() {
         //given: a new stack
         let mut stack = Stack::new();
-        stack.pointer = 1;
+        let _ = stack.push(15);
+        assert_eq!(stack.pointer, 1);
         let _ = stack.pop();
         assert_eq!(stack.pointer, 0);
-        stack.pointer = 2;
-        let _ = stack.pop();
-        assert_eq!(stack.pointer, 1);
     }
 
     #[test]
